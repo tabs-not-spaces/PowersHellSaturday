@@ -28,24 +28,31 @@ function Invoke-ValidateParameters {
     }
 }
 #endregion
+
+#region remote configuration
 function Get-EnvironmentConfiguration {
     $irmParams = @{
         Method = 'Get'
         Uri    = 'https://gist.githubusercontent.com/tabs-not-spaces/6503b302cf451c1bd43c19184cb46940/raw/5e3dbcb59ccb084d28ac542440e5e245d009f42c/environments.json'
     }
-    return Invoke-RestMethod @irmParams
+    $script:environmentJson = Invoke-RestMethod @irmParams
 }
 function Get-ProjectNames {
     param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
-    $json = Get-EnvironmentConfiguration
-    $values = $json.projects.name | Select-Object -Unique
+    if ($null -eq $script:environmentJson) {
+        Get-EnvironmentConfiguration
+    }
+    $values = $script:environmentJson.projects.name | Select-Object -Unique
     return $values | Where-Object { $_ -like "$wordToComplete*" }
 }
 
 function Get-DatabaseNames {
     param($project, $wordToComplete)
-    $json = Get-EnvironmentConfiguration
-    $filteredProjects = $json.projects | Where-Object { $_.name -eq $project }
+    if ($null -eq $script:environmentJson) {
+        Get-EnvironmentConfiguration
+    }
+    $filteredProjects = $script:environmentJson.projects | Where-Object { $_.name -eq $project }
     $values = $filteredProjects.databases | Select-Object -Unique
     return $values | Where-Object { $_ -like "$wordToComplete*" }
 }
+#endregion
