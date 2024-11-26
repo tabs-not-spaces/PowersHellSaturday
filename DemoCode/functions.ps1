@@ -37,8 +37,8 @@ function Get-EnvironmentConfiguration {
     }
     $script:environmentJson = Invoke-RestMethod @irmParams
 }
-function Get-ProjectNames {
-    param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+function Invoke-ProjectNameCompleter {
+    param($wordToComplete)
     if ($null -eq $script:environmentJson) {
         Get-EnvironmentConfiguration
     }
@@ -46,7 +46,7 @@ function Get-ProjectNames {
     return $values | Where-Object { $_ -like "$wordToComplete*" }
 }
 
-function Get-DatabaseNames {
+function Invoke-DatabaseNameCompleter {
     param($project, $wordToComplete)
     if ($null -eq $script:environmentJson) {
         Get-EnvironmentConfiguration
