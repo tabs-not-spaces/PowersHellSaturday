@@ -21,7 +21,6 @@ function Get-EnvironmentConfiguration {
 
 function Invoke-ProjectNameCompleter {
     param($WordToComplete)
-    Write-Host "Searching for: $WordToComplete"
     $values = $script:Configuration.projects.name | Select-Object -Unique
     return $values | Where-Object { $_ -like "$WordToComplete*" }
 }
