@@ -6,7 +6,7 @@ function Get-ProjectAccess {
             param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
             $script:Configuration = $script:Configuration ?? $(Get-EnvironmentConfiguration)
 
-            & (Get-Module ProjectAccess) { Invoke-ProjectNameCompleter -WordToComplete $wordToComplete }
+            & (Get-Module ProjectAccess) { param($wc) Invoke-ProjectNameCompleter -WordToComplete $wc } $wordToComplete
         })]
         [string]$Project,
 
